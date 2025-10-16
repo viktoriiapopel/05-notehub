@@ -1,4 +1,4 @@
-import css from "./MovieGrid.module.css";
+import css from "./NoteForm.module.css";
 import type { Movie } from "../../types/movie";
 
 interface MovieGridProps {

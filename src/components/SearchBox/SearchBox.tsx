@@ -1,13 +1,13 @@
 
-import styles from "./SearchBar.module.css";
+import styles from "./SearchBox.module.css";
 import toast from "react-hot-toast";
 
 
-export interface SearchBarProps {
+export interface SearchBoxProps {
   onSubmit: (query: string) => void;
 }
 
-export default function SearchBar({ onSubmit }: SearchBarProps) {
+export default function SearchBar({ onSubmit }: SearchBoxProps) {
   const formAction = (formData: FormData) => {
     const raw = formData.get("query");
     const query = typeof raw === "string" ? raw.trim() : raw ? String(raw).trim() : "";

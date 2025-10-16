@@ -3,13 +3,13 @@ import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useQuery , keepPreviousData } from '@tanstack/react-query';
 import css from "./App.module.css";
-import Loader from "../Loader/Loader";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import MovieGrid from "../MovieGrid/MovieGrid";
-import MovieModal from "../MovieModal/MovieModal";
-import SearchBar from "../SearchBar/SearchBar";
-import { fetchMovies } from "../../services/movieService";
-import type { Movie } from "../../types/movie";
+import Modal from "../Modal/Modal";
+import NoteForm from "../NoteForm/NoteForm";
+import NoteList from "../NoteList/NoteList";
+import Pagination from "../Pagination/Pagination";
+import SearchBox from "../SearchBox/SearchBox";
+import { fetchNotes } from "../../services/noteService";
+import type { Note } from "../../types/note";
 import ReactPaginate from "react-paginate";
 
 export default function App() {
@@ -40,35 +40,15 @@ export default function App() {
 
   return (
     <div className={css.app}>
-      <SearchBar onSubmit={handleSubmit} />
-      <Toaster position="top-right" />
-      {isSuccess && totalPages > 0 && (
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel="→"
-          onPageChange={({ selected }) => setCurrentPage(selected + 1)}
-          pageRangeDisplayed={5}
-          pageCount={totalPages}
-          previousLabel="←"
-          containerClassName={css.pagination}
-          activeClassName={css.active}
-          marginPagesDisplayed={1}
-          renderOnZeroPageCount={null}
-          forcePage={Math.min(currentPage - 1, totalPages - 1)}
+	<header className={css.toolbar}>
+		{/* Компонент SearchBox */}
+		{/* Пагінація */}
+		{<button className={css.button}>Create note +</button>
+}
+      </header>
+      <NoteList />
+</div>
 
-        />)}
-      {isLoading && <Loader />}
-      {isError && <ErrorMessage message="There was an error, please try again..." />}
-      {isSuccess && data.results.length === 0 && toast.error("No movies found for your request.")}
-
-      {isSuccess && data.results.length > 0 && (
-      
-        <MovieGrid movies={data.results} onSelect={setSelectedMovie} />
-      )}
-        {selectedMovie && (
-        <MovieModal movie={selectedMovie} onClose={() => setSelectedMovie(null)} />
-      )}
-    </div>
   );
 }
 
