@@ -1,5 +1,5 @@
-import axiosInstance from "../api/axiosInstance";
-import type { Note, NewNoteData, NoteUpdateData } from "../types/note";
+
+import type { Note, NoteUpdateData } from "../types/note";
 import axios from "axios";
 
 const api = axios.create({
@@ -8,9 +8,8 @@ const api = axios.create({
     Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`,
   },
 });
-//
-// Інтерфейси для HTTP-рівня
-//
+
+
 export interface FetchNotesParams {
   page?: number;
   perPage?: number;
@@ -21,23 +20,12 @@ export interface FetchNotesResponse {
    notes: Note[];
   page: number;
   perPage: number;
-  total_pages: number;
-  total_notes: number;
+  totalPages: number;
+  totalNotes: number;
 }
 
-//
-// API функції
-//
 
-// Отримати нотатки (із пагінацією + пошуком)
-// export const fetchNotes = async (
-//   { page = 1, perPage = 12, query = "" }: FetchNotesParams
-// ): Promise<FetchNotesResponse> => {
-//   const res = await axiosInstance.get<FetchNotesResponse>("/notes", {
-//     params: { page, query, perPage },
-//   });
-//   return res.data;
-// };
+
 export const fetchNotes = async ({
   page = 1,
   perPage = 12,
@@ -46,43 +34,35 @@ export const fetchNotes = async ({
   page?: number;
   perPage?: number;
   search?: string;
-}) => {
-  const res = await api.get(`/notes`, { params: { page, perPage, search } });
+}): Promise<FetchNotesResponse> => {
+  const res = await api.get("/notes", { params: { page, perPage, search } });
   return res.data;
 };
 
-// Створити нову нотатку
-// export const createNote = async (
-//   newNoteData: NewNoteData
-// ): Promise<Note> => {
-//   const res = await axiosInstance.post<Note>("/notes", newNoteData);
-//   return res.data;
-// };
-
-export const createNote = async (data: NewNoteData) => {
-  const res = await api.post(`/notes`, data);
-  return res.data;
-}; 
-// Оновити нотатку
 export const updateNote = async (
-  noteId: string,
+  id: string,
   updateData: NoteUpdateData
 ): Promise<Note> => {
-  const res = await axiosInstance.patch<Note>(`/notes/${noteId}`, updateData);
+  const res = await api.patch(`/notes/${id}`, updateData);
   return res.data;
 };
 
-// // Видалити нотатку
-// export const deleteNote = async (noteId: string): Promise<Note> => {
-//   const res = await axiosInstance.delete<Note>(`/notes/${noteId}`);
-//   return res.data;
-// };
 
-export const deleteNote = async (id: string) => {
+export const deleteNote = async (id: string): Promise<Note> => {
   const res = await api.delete(`/notes/${id}`);
   return res.data;
 };
 
+export async function createNote(noteData: {
+  title: string;
+  content: string;
+  tag: string;
+}) {
+  const response = await api.post("/notes", noteData); {
+   
+    return response.data;
+  }
+}
 
 
 

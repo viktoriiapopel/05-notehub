@@ -12,7 +12,7 @@ export default function NoteList({ notes }: NoteListProps) {
 const { mutate: handleDelete, isPending } = useMutation({
     mutationFn: (id: string) => deleteNote(id),
     onSuccess: () => {
-      // Після успішного видалення — оновлюємо кеш
+      
       queryClient.invalidateQueries({ queryKey: ["notes"] });
     },
   });

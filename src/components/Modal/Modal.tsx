@@ -16,7 +16,7 @@ export default function Modal({ children, onClose }: ModalProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  // Закриття при кліку на бекдроп
+  
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onClose();
   };

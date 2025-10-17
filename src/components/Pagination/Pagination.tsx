@@ -19,13 +19,13 @@ export default function Pagination({
   return (
     <ReactPaginate
       breakLabel="..."
-      nextLabel=">"
-      previousLabel="<"
+      nextLabel="→"
+      previousLabel="←"
       onPageChange={handlePageClick}
       pageRangeDisplayed={3}
       pageCount={totalPages}
       forcePage={currentPage - 1}
-      containerClassName={css.pagination}     // ✅ тепер збігається з твоїм CSS
+      containerClassName={css.pagination} 
       activeClassName={css.active}
     />
   );

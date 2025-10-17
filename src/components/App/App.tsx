@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useDebounce } from "use-debounce";
-import { useQuery , keepPreviousData } from '@tanstack/react-query';
+import { useQuery , keepPreviousData, useQueryClient } from '@tanstack/react-query';
 import css from "./App.module.css";
 
 import Modal from "../Modal/Modal";
@@ -16,9 +16,10 @@ import type { Note } from "../../types/note";
 export default function App() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
 
-  // Відкладене значення (затримка 500 мс)
   const [debouncedSearch] = useDebounce(search, 500);
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notes", debouncedSearch, page],
@@ -26,16 +27,18 @@ export default function App() {
     placeholderData: keepPreviousData,
   });
 
-  const notes: Note[] = data?.results ?? [];
-  const totalPages = data?.totalPages ?? 1;
+  console.log(" data from query:", data);
+
+  const notes: Note[] = data?.notes ?? [];
+const totalPages = data?.totalPages ?? 1;
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        {/* 🔍 Пошук */}
+        
         <SearchBox value={search} onChange={setSearch} />
 
-        {/* Пагінація (тільки якщо >1 сторінка) */}
+        
         {totalPages > 1 && (
           <Pagination
             currentPage={page}
@@ -44,18 +47,31 @@ export default function App() {
           />
         )}
 
-        {/* Кнопка створення нотатки */}
-        <button className={css.button}>Create note +</button>
+        
+        <button className={css.button} onClick={() => setShowModal(true)}>
+          Create note +
+        </button>
       </header>
 
-      {isLoading && <p>Завантаження...</p>}
-      {isError && <p>Помилка при завантаженні 😢</p>}
+      {isLoading && <p>Loading...</p>}
+      {isError && <p>Error</p>}
 
-      {/* Рендеримо список тільки якщо є нотатки */}
+     
       {notes.length > 0 && <NoteList notes={notes} />}
+      {showModal && (
+        <Modal onClose={() => setShowModal(false)}>
+          <NoteForm
+            onClose={() => setShowModal(false)}
+            onSuccess={() => {
+              queryClient.invalidateQueries({ queryKey: ["notes"] });
+            }}
+          />
+        </Modal>
+      )}
     </div>
   );
 }
+
 
 
 

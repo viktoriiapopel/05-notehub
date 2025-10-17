@@ -6,19 +6,18 @@ import toast from "react-hot-toast";
 
 interface NoteFormProps {
   onClose: () => void;
-  onSuccess: () => void; // викликається після створення нотатки
+  onSuccess: () => void; 
 }
 
 export default function NoteForm({ onClose, onSuccess }: NoteFormProps) {
   const validationSchema = Yup.object({
     title: Yup.string()
-      .min(3, "Мінімум 3 символи")
-      .max(50, "Максимум 50 символів")
-      .required("Обов’язкове поле"),
-    content: Yup.string().max(500, "Максимум 500 символів"),
+      .min(3, "Min 3 characters")
+      .required("Required field"),
+    content: Yup.string().max(500, "Max 500 characters"),
     tag: Yup.mixed<"Todo" | "Work" | "Personal" | "Meeting" | "Shopping">()
-      .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"], "Невірний тег")
-      .required("Обов’язкове поле"),
+      .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"], "Invalid tag")
+      .required("Required field"),
   });
 
   const handleSubmit = async (values: {
@@ -30,13 +29,13 @@ export default function NoteForm({ onClose, onSuccess }: NoteFormProps) {
       await createNote({
         title: values.title,
         content: values.content,
-        tag: [values.tag],
+        tag: values.tag,
       });
-      toast.success("Нотатку створено!");
+      toast.success("The note has been created!");
       onSuccess();
       onClose();
     } catch {
-      toast.error("Помилка при створенні нотатки 😢");
+      toast.error("Error creating note 😢");
     }
   };
 
@@ -99,6 +98,7 @@ export default function NoteForm({ onClose, onSuccess }: NoteFormProps) {
     </Formik>
   );
 }
+
 
 
 
