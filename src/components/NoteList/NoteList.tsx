@@ -29,9 +29,7 @@ const { mutate: handleDelete, isPending } = useMutation({
           <h2 className={css.title}>{note.title}</h2>
           <p className={css.content}>{note.content}</p>
           <div className={css.footer}>
-            {note.tags?.length ? (
-              <span className={css.tag}>{note.tags.join(", ")}</span>
-            ) : null}
+           {note.tag && <span className={css.tag}>{note.tag}</span>}
             <button
               onClick={() => handleDelete(note.id)}
               className={css.button}

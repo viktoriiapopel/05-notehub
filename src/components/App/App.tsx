@@ -9,6 +9,8 @@ import NoteForm from "../NoteForm/NoteForm";
 import NoteList from "../NoteList/NoteList";
 import Pagination from "../Pagination/Pagination";
 import SearchBox from "../SearchBox/SearchBox";
+import Loader from "../Loader/Loader";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { fetchNotes } from "../../services/noteService";
 import type { Note } from "../../types/note";
 
@@ -53,8 +55,9 @@ const totalPages = data?.totalPages ?? 1;
         </button>
       </header>
 
-      {isLoading && <p>Loading...</p>}
-      {isError && <p>Error</p>}
+      {isLoading && <Loader />}
+      {isError && <ErrorMessage message="Не вдалося завантажити нотатки 😢" />}
+
 
      
       {notes.length > 0 && <NoteList notes={notes} />}
