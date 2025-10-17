@@ -1,49 +1,19 @@
 
-import styles from "./SearchBox.module.css";
-import toast from "react-hot-toast";
+import css from "./SearchBox.module.css";
 
-
-export interface SearchBoxProps {
-  onSubmit: (query: string) => void;
+interface SearchBoxProps {
+  value: string;
+  onChange: (value: string) => void;
 }
 
-export default function SearchBar({ onSubmit }: SearchBoxProps) {
-  const formAction = (formData: FormData) => {
-    const raw = formData.get("query");
-    const query = typeof raw === "string" ? raw.trim() : raw ? String(raw).trim() : "";
-    
-        if (!query) {
-          toast.error("Please enter your search query.");
-          return;
-    }
-    
-    onSubmit(query);
-  };
+export default function SearchBox({ value, onChange }: SearchBoxProps) {
   return (
-    <header className={styles.header}>
- <div className={styles.container}>
- <a
- className={styles.link}
- href="https://www.themoviedb.org/"
- target="_blank"
- rel="noopener noreferrer"
- >
- Powered by TMDB
- </a>
- <form className={styles.form} action={formAction}>
- <input
- className={styles.input}
- type="text"
- name="query"
- autoComplete="off"
- placeholder="Search movies..."
- autoFocus
-/>
- <button className={styles.button} type="submit">
- Search
- </button>
- </form>
- </div>
-</header>
+    <input
+      className={css.input}
+      type="text"
+      placeholder="Search notes"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
   );
-};
+}

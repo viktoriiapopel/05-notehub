@@ -5,18 +5,21 @@ export interface Note {
   id: string;
   title: string;
   content: string;
-  tag: string;
+  tags: string;
 }
 
 export interface NewNoteData {
   text: string;
+  title: string;
+  content: string;
+  tags: string[];
 }
 
 export interface NoteUpdateData {
    id: string;
   title?: string;
   content?: string;
-  tag?: string;
+  tags?: string;
 }
 
 export interface NoteTag {

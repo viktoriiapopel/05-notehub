@@ -1,47 +1,30 @@
 import css from "./NoteList.module.css";
-import { useEffect, useState } from "react";
-import { fetchNotes, deleteNote } from "../../services/noteService";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { deleteNote } from "../../services/noteService";
 import type { Note } from "../../types/note";
 
 interface NoteListProps {
-  onDelete?: (id: string) => void;
+  notes: Note[];
 }
 
-export default function NoteList({ onDelete }: NoteListProps) {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [page, setPage] = useState(1);
-  const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export default function NoteList({ notes }: NoteListProps) {
+ const queryClient = useQueryClient();
+const { mutate: handleDelete, isPending } = useMutation({
+    mutationFn: (id: string) => deleteNote(id),
+    onSuccess: () => {
+      // Після успішного видалення — оновлюємо кеш
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
+    },
+  });
 
-  useEffect(() => {
-    const loadNotes = async () => {
-      try {
-        setLoading(true);
-        const { notes } = await fetchNotes({ page, query });
-        setNotes(notes);
-      } catch {
-        setError("Не вдалося завантажити нотатки 😢");
-      } finally {
-        setLoading(false);
-      }
-    };
+  if (!notes.length) {
+    return <p className={css.empty}>Нотаток поки немає 📭</p>;
+  }
 
-    loadNotes();
-  }, [page, query]);
-
-  const handleDelete = async (id: string) => {
-    await deleteNote(id);
-    setNotes(prev => prev.filter(note => note.id !== id));
-    onDelete?.(id);
-  };
-
-  if (loading) return <p>Завантаження...</p>;
-  if (error) return <p className={css.error}>{error}</p>;
 
   return (
     <ul className={css.list}>
-      {notes.map(note => (
+      {notes.map((note) => (
         <li key={note.id} className={css.listItem}>
           <h2 className={css.title}>{note.title}</h2>
           <p className={css.content}>{note.content}</p>
@@ -52,8 +35,9 @@ export default function NoteList({ onDelete }: NoteListProps) {
             <button
               onClick={() => handleDelete(note.id)}
               className={css.button}
+              disabled={isPending}
             >
-              Delete
+              {isPending ? "Deleting..." : "Delete"}
             </button>
           </div>
         </li>
@@ -61,7 +45,6 @@ export default function NoteList({ onDelete }: NoteListProps) {
     </ul>
   );
 }
-
 
 
 
