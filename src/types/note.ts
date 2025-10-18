@@ -3,6 +3,8 @@ export interface Note {
   title: string;
   content: string;
   tag: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface NewNoteData {
@@ -16,9 +18,4 @@ export interface NoteUpdateData {
   title?: string;
   content?: string;
   tag?: string;
-}
-
-export interface NoteTag {
-  id: string;
-  name: string;
 }

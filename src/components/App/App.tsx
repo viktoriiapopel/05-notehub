@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
-import { useQuery, keepPreviousData, useQueryClient } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import css from './App.module.css';
 
 import Modal from '../Modal/Modal';
@@ -19,7 +19,6 @@ export default function App() {
   const [showModal, setShowModal] = useState(false);
 
   const [debouncedSearch] = useDebounce(search, 500);
-  const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['notes', debouncedSearch, page],
@@ -52,12 +51,7 @@ export default function App() {
       {notes.length > 0 && <NoteList notes={notes} />}
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
-          <NoteForm
-            onClose={() => setShowModal(false)}
-            onSuccess={() => {
-              queryClient.invalidateQueries({ queryKey: ['notes'] });
-            }}
-          />
+          <NoteForm onClose={() => setShowModal(false)} />
         </Modal>
       )}
     </div>
