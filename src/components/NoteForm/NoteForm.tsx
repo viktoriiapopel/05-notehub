@@ -16,7 +16,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
     mutationFn: createNote,
     onSuccess: () => {
       toast.success('The note has been created!');
-      // ✅ Після успішного створення — оновлюємо кеш запиту нотаток
+      
       queryClient.invalidateQueries({ queryKey: ['notes'] });
       onClose();
     },
