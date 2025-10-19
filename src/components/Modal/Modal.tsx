@@ -17,8 +17,8 @@ export default function Modal({ children, onClose }: ModalProps) {
     document.body.style.overflow = 'hidden';
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
     document.body.style.overflow = originalOverflow;
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
